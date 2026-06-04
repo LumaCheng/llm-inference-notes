@@ -152,6 +152,10 @@ What I can say with confidence is the other half: **Full FP8 is unsafe to use on
 
 The natural follow-up, comparing KV FP16 vs KV FP8 with everything else held constant, would need H100 (where FA3 + FP8 KV is supported and switching the KV dtype doesn't force a backend swap) and a pre-calibrated FP8 checkpoint (which avoids the uncalibrated `q_scale=1.0` issue separately). That's outside this study's scope.
 
+## Cross-checking against the published vLLM FP8 announcement
+
+Neural Magic and Anyscale [announced FP8 support in vLLM 0.5](https://developers.redhat.com/articles/2024/07/15/vllm-brings-fp8-inference-open-source-community) with >99% accuracy recovery on Qwen2 and Llama 3 across the Open LLM Leaderboard, including GSM8K. Their numbers are real, but the setup differs from this benchmark on three axes: 2× H100 (SM 9.0, where FA3 + FP8 KV is supported), pre-calibrated static FP8 checkpoints (not vLLM's dynamic on-the-fly path), and no explicit FP8 KV cache test. Both results are correct in their respective setups. This case study fills the gap between the published happy path and what dynamic FP8 + KV FP8 produces out-of-the-box on SM < 9.0 hardware.
+
 ## Reproducing
 
 ```bash
