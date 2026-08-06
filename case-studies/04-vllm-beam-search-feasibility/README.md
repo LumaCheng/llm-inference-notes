@@ -113,4 +113,6 @@ This isn't necessarily permanent. RFC #8306's design decision was debated in its
 - vLLM beam search scoping decision: [RFC #8306](https://github.com/vllm-project/vllm/issues/8306)
 - Triton vLLM backend releases: [GitHub releases](https://github.com/triton-inference-server/vllm_backend/releases)
 - TRT-LLM Executor API (`beam_width` parameter): [tensorrt_llm/executor/executor.py](https://github.com/NVIDIA/TensorRT-LLM/blob/main/tensorrt_llm/executor/executor.py)
+- TGI request types (no beam search parameter): [types.py](https://github.com/huggingface/text-generation-inference/blob/main/clients/python/text_generation/types.py)
+- SGLang sampling parameters (no beam search parameter): [sampling_params.py](https://github.com/sgl-project/sglang/blob/main/python/sglang/srt/sampling/sampling_params.py)
 - Related case study: [TRT-LLM beam search params silently ignored](../01-trtllm-beam-search-abi/README.md)

@@ -130,11 +130,11 @@ So the precise framing of this finding is: **vLLM's choice of attention backend 
 
 Perplexity on wikitext is the default quantization-quality metric in most papers and tutorials, so it's the obvious first thing to reach for. But on these three configs the two metrics tell very different stories:
 
-| Config | wikitext word_PPL | GSM8K accuracy |
+| Config | wikitext word_PPL (↓ better) | GSM8K accuracy (↑ better) |
 |---|---|---|
 | FP16 | 12.10 | 0.6096 |
 | Mixed | 12.22 (+1.0%) | 0.6042 (−0.9%) |
-| Full FP8 | 15.99 (+32.2%) | 0.0205 (**−96.6%**) |
+| Full FP8 | 15.99 (+32.2%, worse) | 0.0205 (**−96.6%**) |
 
 Wikitext PPL puts the full-FP8 regression at +32%. Sounds bad but survivable. GSM8K shows the model is catastrophically broken. Two-orders-of-magnitude difference in apparent severity, on the same configuration.
 
