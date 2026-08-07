@@ -67,6 +67,15 @@ The roofline says there's a crossover. As sequence length and batch size grow, K
 
 I have not measured that crossover in this workload, so this is a hypothesis from the model, not a finding. It's also the single most useful thing to measure before enabling KV FP8 anywhere: find the context length and batch size where the lines cross for *your* model, and set the default from that, not from guesswork.
 
+## This isn't just my finding
+
+Two independent sources line up with the mechanism here:
+
+- **[vLLM's own FP8 KV-cache analysis (April 2026)](https://vllm.ai/blog/2026-04-22-fp8-kvcache)** reaches the same conclusion on the performance side: it recommends staying in BF16 when contexts are short (under ~7k tokens), because FP8's fixed overhead makes BF16 slightly faster for inter-token latency when there's little KV traffic, and notes FP8 is "most compelling when KV-cache traffic dominates." That's the same roofline crossover this note describes — though their guidance is framed around latency, not the ranking-quality angle this note adds.
+- **[The GEAR paper](https://arxiv.org/abs/2403.05527)** documents the compounding effect directly: "the autoregressive decoding process further compounds the error of each step," which is the same mechanism behind the ranking-sensitivity point above.
+
+So the short version — keep KV in FP16 unless the cache is genuinely the bottleneck — lines up with both a production serving stack (vLLM) and the compression literature. The ranking-quality angle, where the error hits recall directly, is the piece most generation-focused benchmarks don't measure.
+
 ## Reproducing the mechanism — and the one trap that breaks it
 
 You don't need my workload to see the effect; you need a small model and short sequences, holding weight precision fixed and varying only `kv_cache_dtype`. But there's a hardware trap that will throw off the measurement.
